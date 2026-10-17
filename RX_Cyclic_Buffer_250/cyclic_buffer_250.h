@@ -1,4 +1,16 @@
-
+/* For Arduino Nano/Uno or similar
+*  Cyclic Buffer is a circular FIFO with a write index and a read index.
+*  It's designed to store signal timings from a 433/868Mhz receiver pin via interrupt.
+*  Timings are stored after each Space/Mark transition, or OFF/ON transition, if you prefer.
+*  Two durations in microseconds representing the Mark/ON time and the Space/OFF time are stored.
+*  
+*  There are various devices that send data in different formats and therefore a calling program
+*  can read the durations and determine what the coding pattern is for the device being received and
+*  decode the data as required. The advantage of a large buffer is it allows printing of detailed
+*  signal data without losing information. However, if the buffer does fill, the writing is paused until the
+*  buffer has been completely emptied which should minimise data corruption by ensuring that complete 
+*  signal bursts can be captured and analysed.
+*/
 
 
 #ifndef cyclic_buffer_250_h
@@ -55,11 +67,6 @@ class Cyclic_MS_Buffer {
         mark_space_t get_buffer(uint8_t index);      // Get the mark/space values at the given index
         bool lookahead_data_available();             // New data has been written since last get_lookahead_data()
         mark_space_t get_lookahead_data();           // Returns data at the lookahead_index and advances index
-        mark_space_t read_backwards();               // Backup the read_index and return the value at the index.
-        uint8_t previous_read_index();               // Return the previous read_index
-        uint8_t previous_read_index(uint8_t offset); // Return a negative offset from the current read_index
-        uint8_t offset_index(int16_t offset, int16_t index); // Return a offset from the provided index
-        uint8_t backup_read_index();                 // Backup read_index by one
         void write_mark(uint16_t count);  // Write a mark duration to the buffer without advancing the write index
         void write_space(uint16_t count); // Write a space duration to the buffer, advancing the write index
         void write_data(mark_space_t data); // Write a mark/space duration to the buffer, advancing the write index

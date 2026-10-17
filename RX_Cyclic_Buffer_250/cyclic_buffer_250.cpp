@@ -101,34 +101,6 @@ mark_space_t Cyclic_MS_Buffer::get_buffer(uint8_t index) {
     return bit_buffer[index];
 }
 
-// Return the previous read_index
-uint8_t Cyclic_MS_Buffer::previous_read_index() {
-    return previous_read_index(1);
-}
-
-// Return a negative offset from the current read_index
-uint8_t Cyclic_MS_Buffer::previous_read_index(uint8_t offset) {
-    return offset_index(-offset, read_index);
-}
-
-// // Return a offset from the provided index
-uint8_t Cyclic_MS_Buffer::offset_index(int16_t offset, int16_t index) {    
-    index += offset;
-    while (index >= CYCLIC_BUFFER_SIZE) index -= CYCLIC_BUFFER_SIZE;
-    while (index < 0) index += CYCLIC_BUFFER_SIZE;
-    return (uint8_t)index;
-}
-
-// Backup read_index by one
-uint8_t Cyclic_MS_Buffer::backup_read_index() {
-    return read_index = previous_read_index();
-}
-
-// Backup the read_index and return the value at the index.
-mark_space_t Cyclic_MS_Buffer::read_backwards() {
-    backup_read_index();
-    get_buffer();
-}
 
 // Write a mark duration to the buffer without advancing the write index
 void Cyclic_MS_Buffer::write_mark(uint16_t duration) {
